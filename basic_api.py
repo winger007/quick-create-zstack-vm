@@ -22,12 +22,12 @@ def api_call(session_uuid, api_id, api_content):
         raise Exception("failed to make an API call, %s, %s" % (response.status, response.reason))
 
     rsp_body = response.read()
-    print "meilei xxxxxxxxxxxxxxxxxxxxxxxxx"
     print rsp_body
 
     rsp = json.loads(rsp_body)
 
     if rsp["state"] == "Done":
+        print json.loads(rsp["result"])
         return json.loads(rsp["result"])
 
     job_uuid = rsp["uuid"]
@@ -40,6 +40,7 @@ def api_call(session_uuid, api_id, api_content):
         rsp_body = response.read()
         rsp = json.loads(rsp_body)
         if rsp["state"] == "Done":
+            print json.loads(rsp["result"])
             return json.loads(rsp["result"])
 
         time.sleep(1)
@@ -66,5 +67,5 @@ def login():
 
     session_uuid = rsp.values()[0]["inventory"]["uuid"]
 
-    print "successfully login, session uuid is: %s" % session_uuid
+    print "\nsuccessfully login, session uuid is: %s" % session_uuid
     return session_uuid
