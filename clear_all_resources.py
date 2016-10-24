@@ -2,8 +2,7 @@
 # encoding: utf-8
 
 from zone import *
-from sftp_backup_storage import *
-from instance_offering import *
+from vm import *
 
 if __name__ == '__main__':
     session_uuid = login()
@@ -24,4 +23,10 @@ if __name__ == '__main__':
         print offering
         offering_uuid = offering['uuid']
         delete_instance_offering(session_uuid, offering_uuid)
+
+    instance_list = query_vm(session_uuid, [])
+    for vm in instance_list['org.zstack.header.vm.APIQueryVmInstanceReply']['inventories']:
+        print vm
+        vm_uuid = vm['uuid']
+        expunge_vm(session_uuid,vm_uuid)
 

@@ -32,7 +32,7 @@ def update_l2novlan_network(session_uuid, l2novlan_network_uuid, l2novlan_networ
     error_if_fail(rsp)
     print "\nsuccessfully update l2novlan_network: %s" % l2novlan_network_uuid
 
-def delete_l2novlan_network(session_uuid, l3novlan_network_uuid):
+def delete_l2novlan_network(session_uuid, l2novlan_network_uuid):
     content = {"uuid" : l2novlan_network_uuid}
     rsp = api_call(session_uuid, "org.zstack.header.network.l2.APIDeleteL2NetworkMsg", content)
     error_if_fail(rsp)

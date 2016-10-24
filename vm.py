@@ -16,7 +16,7 @@ def create_vm(session_uuid, vm_name, instance_offering_uuid, image_uuid, l3_netw
 
 def query_vm(session_uuid, conditions):
     content = {'conditions':conditions}
-    rsp = api_call(session_uuid, "org.zstack.header.vm.APIQueryVmMsg", content)
+    rsp = api_call(session_uuid, "org.zstack.header.vm.APIQueryVmInstanceMsg", content)
     error_if_fail(rsp)
     print rsp
     print "\nsuccessfully query vm"
@@ -28,11 +28,17 @@ def update_vm(session_uuid, vm_uuid, vm_name):
     error_if_fail(rsp)
     print "\nsuccessfully update vm: %s" % vm_uuid
 
-def delete_vm(session_uuid, vm_uuid):
+def destroy_vm(session_uuid, vm_uuid):
     content = {"uuid" : vm_uuid}
-    rsp = api_call(session_uuid, "org.zstack.header.vm.APIDeleteVmInstanceMsg", content)
+    rsp = api_call(session_uuid, "org.zstack.header.vm.APIDestroyVmInstanceMsg", content)
     error_if_fail(rsp)
-    print "\nsuccessfully delete vm: %s" % vm_uuid
+    print "\nsuccessfully destroy vm: %s" % vm_uuid
+
+def expunge_vm(session_uuid, vm_uuid):
+    content = {"uuid" : vm_uuid}
+    rsp = api_call(session_uuid, "org.zstack.header.vm.APIExpungeVmInstanceMsg", content)
+    error_if_fail(rsp)
+    print "\nsuccessfully expunge vm: %s" % vm_uuid
 
 
 def logout(session_uuid):
@@ -51,9 +57,9 @@ if __name__ == '__main__':
     attach_primary_storage_to_cluster(session_uuid, cluster_uuid, primary_storage_uuid)
     host_uuid = add_host(session_uuid, cluster_uuid, "127.0.0.1","test-host", "root", "linux123", "22")
     backup_storage_uuids = []
-    sftp_bs_uuid = add_sftp_backup_storage(session_uuid,"/bs","sftp_bs","127.0.0.1","root","linux123")
-    attach_backup_storage_to_zone(session_uuid, zone_uuid, sftp_bs_uuid)
-    backup_storage_uuids.append(sftp_bs_uuid)
+    backup_storage_uuid = add_sftp_backup_storage(session_uuid,"/bs","sftp_bs","127.0.0.1","root","linux123")
+    attach_backup_storage_to_zone(session_uuid, zone_uuid, backup_storage_uuid)
+    backup_storage_uuids.append(backup_storage_uuid)
     image_uuid = add_image(session_uuid, backup_storage_uuids, "test-image", "file:///root/zstack-image-1.4.qcow2", "qcow2", "Linux")
     l2novlan_network_uuid = create_l2novlan_network(session_uuid,zone_uuid,"l2_no_vlan","eth0")
     attach_l2_network_to_cluster(session_uuid, cluster_uuid, l2novlan_network_uuid)
@@ -71,8 +77,9 @@ if __name__ == '__main__':
     vm_uuid = create_vm(session_uuid,"vm1", instance_offering_uuid, image_uuid, l3_network_uuids)
     query_vm(session_uuid,[])
     update_vm(session_uuid, vm_uuid, "vm2")
-    delete_vm(session_uuid, vm_uuid)
+    destroy_vm(session_uuid, vm_uuid)
+    expunge_vm(session_uuid, vm_uuid)
     delete_image(session_uuid, image_uuid)
     delete_backup_storage(session_uuid, backup_storage_uuid)
-    delete_zone(zone_uuid)
+    delete_zone(session_uuid, zone_uuid)
     logout(session_uuid)
