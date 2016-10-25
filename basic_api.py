@@ -4,6 +4,7 @@
 import httplib
 import json
 import time
+import hashlib
 
 # return a dict containing API return value
 def api_call(session_uuid, api_id, api_content):
@@ -57,10 +58,13 @@ def error_if_fail(rsp):
         error = rsp.values()[0]["error"]
         raise Exception("failed to login, %s" % json.dumps(error))
 
-def login():
+def login(account_name='admin', password='password'):
+
+    sha512_password = hashlib.sha512(password).hexdigest()
+    print sha512_password
     content = {
-            "accountName": "admin",
-            "password": "b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86"
+            "accountName": account_name,
+            "password":  sha512_password
     }
     rsp = api_call(None, "org.zstack.header.identity.APILogInByAccountMsg", content)
     error_if_fail(rsp)

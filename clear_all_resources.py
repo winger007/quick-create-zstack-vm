@@ -5,7 +5,7 @@ from zone import *
 from vm import *
 
 if __name__ == '__main__':
-    session_uuid = login()
+    session_uuid = login(account_name='admin',password='password')
     rsp_list = query_zone(session_uuid, [])
     for rsp in rsp_list['org.zstack.header.zone.APIQueryZoneReply']['inventories']:
         print rsp
