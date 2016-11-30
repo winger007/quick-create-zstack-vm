@@ -37,12 +37,6 @@ def delete_backup_storage(session_uuid, backup_storage_uuid):
     error_if_fail(rsp)
     print "\nsuccessfully delete backup_storage: %s" % backup_storage_uuid
 
-def logout(session_uuid):
-    content = {"sessionUuid": session_uuid}
-    rsp = api_call(None, "org.zstack.header.identity.APILogOutMsg", content)
-    error_if_fail(rsp)
-    print "\nsuccessfully logout"
-
 if __name__ == '__main__':
     session_uuid = login()
     zone_uuid = create_zone(session_uuid, 'zone1')

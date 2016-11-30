@@ -44,12 +44,6 @@ def delete_instance_offering(session_uuid, instance_offering_uuid):
     error_if_fail(rsp)
     print "\nsuccessfully delete instance_offering: %s" % instance_offering_uuid
 
-def logout(session_uuid):
-    content = {"sessionUuid": session_uuid}
-    rsp = api_call(None, "org.zstack.header.identity.APILogOutMsg", content)
-    error_if_fail(rsp)
-    print "\nsuccessfully logout"
-
 if __name__ == '__main__':
     session_uuid = login()
     instance_offering_uuid = create_instance_offering(session_uuid, "instance-offering1", 1, 1, 16*1024*1024)

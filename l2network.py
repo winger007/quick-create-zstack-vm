@@ -38,12 +38,6 @@ def delete_l2novlan_network(session_uuid, l2novlan_network_uuid):
     error_if_fail(rsp)
     print "\nsuccessfully delete l2novlan_network: %s" % l2novlan_network_uuid
 
-def logout(session_uuid):
-    content = {"sessionUuid": session_uuid}
-    rsp = api_call(None, "org.zstack.header.identity.APILogOutMsg", content)
-    error_if_fail(rsp)
-    print "\nsuccessfully logout"
-
 if __name__ == '__main__':
     session_uuid = login()
     zone_uuid = create_zone(session_uuid, 'zone1')

@@ -73,3 +73,9 @@ def login(account_name='admin', password='password'):
 
     print "\nsuccessfully login, session uuid is: %s" % session_uuid
     return session_uuid
+
+def logout(session_uuid):
+    content = {"sessionUuid": session_uuid}
+    rsp = api_call(None, "org.zstack.header.identity.APILogOutMsg", content)
+    error_if_fail(rsp)
+    print "\nsuccessfully logout"
