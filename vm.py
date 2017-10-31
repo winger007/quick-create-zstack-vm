@@ -6,19 +6,22 @@ from image import *
 from host import *
 from local_primary_storage import *
 import os
+import re
+import commands
 
 
 image_path = "file:///opt/zstack-dvd/zstack-image-1.4.qcow2"
 #add host will add local host as compute node
-host_ip = os.system("ip a | grep \"inet \" | grep -v 127 | awk -F \" \" '{print $2}' | awk -F \"/\" '{print $1}'")
+status, host_ip = commands.getstatusoutput("ip a | grep \"inet \" | grep -v 127 | awk -F \" \" '{print $2}' | awk -F \"/\" '{print $1}'")
 l3_start_ip = "192.168.0.100" 
 l3_end_ip = "192.168.0.200"
 l3_net_mask = "255.255.255.0"
 l3_gw_ip = "192.168.0.1"
 
-if host_ip is None:
-        print "host ip %s is illeage" % host_ip
-        sys.exit(1)
+ip_check = re.compile('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')  
+if not ip_check.match("%s" % host_ip):
+   print "The ip address : %s seems not a valid ip" % host_ip
+   sys.exit(1)
 
 def create_vm(session_uuid, vm_name, instance_offering_uuid, image_uuid, l3_network_uuids):
     content = {"name" : vm_name, "instanceOfferingUuid":instance_offering_uuid, "imageUuid":image_uuid,

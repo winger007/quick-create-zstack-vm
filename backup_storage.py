@@ -19,7 +19,7 @@ def add_imagestore_backup_storage(session_uuid, url, name, hostname, username, p
 
 def query_backup_storage(session_uuid, conditions):
     content = {'conditions':conditions}
-    rsp = api_call(session_uuid, "org.zstack.storage.backup.sftp.APIQuerySftpBackupStorageMsg", content)
+    rsp = api_call(session_uuid, "org.zstack.header.storage.backup.APIQueryBackupStorageMsg", content)
     error_if_fail(rsp)
     print "\nsuccessfully query backup storage"
     print rsp
