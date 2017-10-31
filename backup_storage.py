@@ -9,6 +9,13 @@ def add_sftp_backup_storage(session_uuid, url, name, hostname, username, passwor
     print "\nsuccessfully add backup_storage: %s" % name
     return rsp['org.zstack.header.storage.backup.APIAddBackupStorageEvent']['inventory']['uuid']
 
+def add_imagestore_backup_storage(session_uuid, url, name, hostname, username, password):
+    content = {"name":name,  "url":url, "hostname":hostname, "username":username, "password":password}
+    rsp = api_call(session_uuid, "org.zstack.storage.backup.imagestore.APIAddImageStoreBackupStorageMsg", content)
+    error_if_fail(rsp)
+    print "\nsuccessfully add backup_storage: %s" % name
+    return rsp['org.zstack.header.storage.backup.APIAddBackupStorageEvent']['inventory']['uuid']
+
 
 def query_backup_storage(session_uuid, conditions):
     content = {'conditions':conditions}
@@ -41,7 +48,8 @@ if __name__ == '__main__':
     session_uuid = login()
     zone_uuid = create_zone(session_uuid, 'zone1')
     cluster_uuid = create_cluster(session_uuid, zone_uuid, 'cluster1', 'KVM')
-    backup_storage_uuid = add_sftp_backup_storage(session_uuid,'/bs', 'test-bs', "127.0.0.1", 'root', 'linux123')
+    #backup_storage_uuid = add_sftp_backup_storage(session_uuid,'/bs', 'test-bs', "127.0.0.1", 'root', 'linux123')
+    backup_storage_uuid = add_imagestore_backup_storage(session_uuid,'/bs', 'test-bs', "127.0.0.1", 'root', 'linux123')
     query_backup_storage(session_uuid, [])
     update_backup_storage(session_uuid, backup_storage_uuid, "backup_storage2")
     delete_backup_storage(session_uuid, backup_storage_uuid)

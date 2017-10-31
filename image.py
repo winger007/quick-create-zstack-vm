@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from sftp_backup_storage import *
+from backup_storage import *
 
 def add_image(session_uuid, backup_storage_uuids, name, url, format, platform ):
     content = {"name":name, "url":url, "format":format, "platform":platform, "backupStorageUuids":backup_storage_uuids}
